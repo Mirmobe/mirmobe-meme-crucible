@@ -1,0 +1,12 @@
+{
+  "name": "mirmobe-meme-crucible",
+  "version": "1.0.0",
+  "description": "Sword in the Stone themed cartoon meme coin generator for Mirmobe",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["meme-coin", "crypto", "disney", "sword-in-the-stone", "solana", "web3"],
+  "author": "Mirmobe",
+  "license": "MIT"
+}
