@@ -1,0 +1,5 @@
+node_modules/
+.irys-sol-key
+.irys-sol-key.json
+WALLET-KEY.txt
+*.pem
