@@ -15,6 +15,9 @@ Live site: [mirmobe.github.io/mirmobe-meme-crucible](https://mirmobe.github.io/m
 - Upload from the file picker, drag-and-drop, or paste (when the browser exposes an image on the clipboard). Use it as the base or as its own layer. A short video can be the base of a video meme.
 - Download PNG or JPG, or share the PNG when the browser allows file sharing.
 - Video memes, entirely on device: zoom, pan, shake, text pop-in, sparks, and embers. Caption timing per text layer. Export WebM, MP4, or GIF, with a progress bar and cancel.
+- Generate with AI: a prompt and a style (cartoon realistic, comic, pixel art, anime, oil painting, or 3D render). The picture comes from Pollinations' free classic image endpoint, with no API key. Use it as the base or as a layer, or roll a new seed. Suggest captions uses their free text endpoint. The trial gates this the same way as the rest of the app.
+
+The free image service draws at most a 768×768 area, keeps the current frame's aspect ratio, allows about one image every 45 seconds and one caption request every 30 seconds, and may stamp a small Pollinations mark even when `nologo=true` is sent. It is best-effort, with no uptime promise. Prompts are sent to that service and the same URL can be cached publicly. A client-side filter blocks obvious sexual content, sexual or exploitative content involving minors, real-person deepfake requests, and hate. Pollinations applies its own filter as well (`safe=true`).
 
 Heavy pieces (the other scenes, the cast, the sticker raster, and the video encoder) load after the first picture is on screen.
 
@@ -37,6 +40,7 @@ The unlock buys use of the app. It is not an investment and the page does not ma
 - Paste of images depends on the browser. iOS often only pastes images in some fields; the file picker is the reliable path.
 - The share button sends a file only when `navigator.canShare({ files })` is true. Otherwise it downloads the PNG.
 - Very old browsers without canvas capture or WebCodecs can still export a GIF.
+- AI pictures need the browser to reach `image.pollinations.ai` and `text.pollinations.ai`. The picture is fetched as a blob and copied onto a canvas before it is used, so PNG, JPG, and video export stay untainted. If the service is slow, down, or asking for a short wait, the panel shows an error and a Retry button.
 
 ## Hosting
 
