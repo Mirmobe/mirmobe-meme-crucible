@@ -31,6 +31,7 @@
         <button type="button" id="undoBtn">Undo</button>
         <button type="button" id="redoBtn">Redo</button>
         <button type="button" id="templatesBtn">Templates</button>
+        <button type="button" id="aiOpenBtn">Generate with AI</button>
         <button type="button" id="surpriseBtn">Surprise</button>
       </div>
       <div class="stage-wrap" id="stageWrap">
@@ -51,6 +52,7 @@
       <div id="inspector"></div>
       <div class="tabs" role="tablist">
         <button type="button" data-tab="text">Text</button>
+        <button type="button" data-tab="ai">AI</button>
         <button type="button" data-tab="cast">Cast</button>
         <button type="button" data-tab="stickers">Stickers</button>
         <button type="button" data-tab="scenes">Scenes</button>
@@ -63,6 +65,30 @@
       <div data-panel="text">
         <p class="hint">Add as many lines as you want. Font, size, color, outline, shadow, and alignment sit in the inspector when a text layer is selected.</p>
         <button type="button" id="addTextBtn" class="primary">Add text</button>
+      </div>
+
+      <div data-panel="ai" hidden>
+        <p class="hint">Describe a picture and pick a style. The result can be the base or its own layer. Images are made by Pollinations, a third-party free service. Prompts are sent there, and the same prompt and seed can be cached on their side. Leave out private details.</p>
+        <label>Prompt
+          <textarea id="aiPrompt" rows="3" maxlength="400" placeholder="A copper crucible of molten gold on a wooden bench"></textarea>
+        </label>
+        <label>Style
+          <select id="aiStyle"></select>
+        </label>
+        <p class="hint" id="aiSizeNote"></p>
+        <div class="row-btns">
+          <button type="button" id="aiGenerate" class="primary">Generate</button>
+          <button type="button" id="aiRetry" hidden>Retry</button>
+          <button type="button" id="aiSeed">New seed</button>
+        </div>
+        <p class="hint" id="aiStatus" role="status"></p>
+        <img id="aiPreview" class="ai-preview" alt="" hidden>
+        <div class="row-btns" id="aiPlace" hidden>
+          <button type="button" id="aiBase" class="primary">Set as base</button>
+          <button type="button" id="aiLayer">Add as a layer</button>
+        </div>
+        <button type="button" id="aiCaptions">Suggest captions</button>
+        <div class="ai-captions" id="aiCaptionList"></div>
       </div>
 
       <div data-panel="cast" hidden>

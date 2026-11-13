@@ -1,6 +1,7 @@
 import { ASPECTS, FONTS, BACKGROUNDS, CHARACTERS, loadImage, drawProceduralBackground, coverImage } from './library.js';
 import { stickerList, stickerCanvas, warmStickerThumbs } from './stickers.js';
 import { TEMPLATES, FX_PRESETS, presetById } from './templates.js';
+import { mountAi } from './generate.js';
 
 const uid = (() => {
   let n = 1;
@@ -90,6 +91,7 @@ export class Editor {
     } catch (err) { /* system fonts still draw */ }
     await this.applyTemplate(TEMPLATES[0], false);
     this.preloadRest();
+    try { mountAi(this); } catch (err) { this.toast('The AI panel did not start.'); }
   }
 
   toast(message) {
@@ -325,6 +327,27 @@ export class Editor {
       else made.name = 'Image';
     }
     return made;
+  }
+
+  addCaption(text) {
+    const count = this.layers.filter((layer) => layer.type === 'text').length;
+    this.pushHistory();
+    const layer = this.materialize({
+      type: 'text',
+      text: String(text || 'CAPTION').slice(0, 80),
+      x: 0.5,
+      y: 0.16 + (count % 3) * 0.34,
+      w: 0.9,
+      h: 0.16,
+      size: 0.062,
+      outline: 0.012,
+      shadow: 0.008,
+      upper: true,
+      anim: 'pop',
+      lockAspect: false
+    });
+    this.layers.push(layer);
+    this.select(layer.id);
   }
 
   addText() {
@@ -1046,6 +1069,7 @@ export class Editor {
     document.getElementById('redoBtn').addEventListener('click', () => this.redoOnce());
     document.getElementById('surpriseBtn').addEventListener('click', () => this.surprise());
     document.getElementById('templatesBtn').addEventListener('click', () => this.openTemplates());
+    document.getElementById('aiOpenBtn').addEventListener('click', () => this.showTab('ai'));
     document.getElementById('closeTemplates').addEventListener('click', () => this.closeTemplates());
     document.getElementById('pngBtn').addEventListener('click', () => this.exportStill('image/png', 'meme-crucible.png'));
     document.getElementById('jpgBtn').addEventListener('click', () => this.exportStill('image/jpeg', 'meme-crucible.jpg'));
@@ -1116,7 +1140,17 @@ export class Editor {
     document.querySelectorAll('[data-panel]').forEach((panel) => {
       panel.hidden = panel.dataset.panel !== name;
     });
+    const inspector = document.getElementById('inspector');
+    if (inspector) inspector.hidden = name === 'ai';
     if (name === 'video') this.refreshCaptions();
+    if (name === 'ai') {
+      const panel = document.querySelector('.panel');
+      const anchor = document.getElementById('aiPrompt');
+      if (panel && anchor) {
+        const delta = anchor.getBoundingClientRect().top - panel.getBoundingClientRect().top;
+        panel.scrollTop += delta - 8;
+      }
+    }
     if (name === 'stickers' && !this.stickersReady) {
       this.stickersReady = true;
       warmStickerThumbs();

@@ -151,6 +151,13 @@ button.is-on, .chip.is-on { background: #6b3e12; color: #fff6df; border-color: #
 .tabs button { border-radius: 10px; background: transparent; min-height: 40px; white-space: nowrap; }
 #inspector { background: rgba(255, 250, 240, 0.7); border: 1px dashed var(--line); border-radius: 12px; padding: 0.7rem; margin-bottom: 0.7rem; }
 .hint { color: var(--ink-soft); margin: 0.2rem 0; }
+.ai-preview:not([hidden]) {
+  display: block; width: 100%; height: auto; border-radius: 12px; margin: 0.4rem 0;
+  background: #22180f; border: 1px solid var(--line);
+}
+#aiStatus.is-error { color: #9f1239; font-weight: 700; }
+.ai-captions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem; }
+.ai-captions .chip { text-align: left; border-radius: 12px; }
 label { display: block; font-weight: 700; font-size: 0.86rem; margin: 0.45rem 0; color: #4a2e18; }
 textarea, select, input[type="text"], input[type="color"] {
   width: 100%; margin-top: 0.25rem; border: 1px solid rgba(90, 52, 24, 0.35);
