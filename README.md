@@ -1,17 +1,47 @@
-# Mirmobe's Magic Meme Crucible ⚔️🦉
+# Meme Crucible
 
-A whimsical, cartoon-styled Meme Coin Generator inspired by Disney's *The Sword in the Stone* (1963) and powered by [Mirmobe](https://mirmobe.wordpress.com).
+A static meme forge for pictures and short clips. Original wizard-and-forge art, no account, no server. It is an app for making images. **Apps, not investments.**
 
-## 🔮 Highlights
-- **Arthurian Disney Aesthetics:** Merlin blue robes, parchment scrolls, bubbling spells, Archimedes the owl, and Excalibur in the anvil.
-- **Higitus Figitus Spell:** Randomizes coin names, tickers, prophecies, and alchemical archetypes.
-- **Interactive Sigil Canvas:** Real-time character creation for Archimedes, Excalibur, the Romantic Squirrel, Merlin, and Wart the Frog.
-- **Pull the Sword Launchpad:** Users pull Excalibur from the iron anvil to unleash Web Audio fanfare and generate their official Royal Meme Charter.
-- **One-Click Deploy:** Zero-dependency, pure HTML/CSS/JS frontend ready for GitHub Pages, Questo, Vercel, or Netlify.
+Live site: [mirmobe.github.io/mirmobe-meme-crucible](https://mirmobe.github.io/mirmobe-meme-crucible/)
 
-## 🚀 Live Demo & Hosting
-Host instantly for free on **GitHub Pages**:
-1. Push this repository to GitHub.
-2. Go to **Settings > Pages**.
-3. Under **Build and deployment**, select **Source: Deploy from a branch** and choose `main` / `root`.
-4. Your meme generator will be live at `https://<your-username>.github.io/<repo-name>/`!
+## What you can do
+
+- Drag, resize, and rotate every layer. Reorder, duplicate, flip, undo, and redo.
+- Several text boxes, each with font, size, color, outline, shadow, and alignment.
+- Cast: Questo, Soot, Cinder, and Kindle. A sticker shelf of forge props. Scene plates and a few generated backdrops.
+- Filters and frames: brightness and contrast, glow, vignette, deep-fry, retro, comic halftone, and others.
+- Aspect presets: square, 16:9, 9:16 story, and an X post frame.
+- Template gallery.
+- Upload from the file picker, drag-and-drop, or paste (when the browser exposes an image on the clipboard). Use it as the base or as its own layer. A short video can be the base of a video meme.
+- Download PNG or JPG, or share the PNG when the browser allows file sharing.
+- Video memes, entirely on device: zoom, pan, shake, text pop-in, sparks, and embers. Caption timing per text layer. Export WebM, MP4, or GIF, with a progress bar and cancel.
+
+Heavy pieces (the other scenes, the cast, the sticker raster, and the video encoder) load after the first picture is on screen.
+
+## Trial and unlock
+
+The five-minute sample, the one-time share bonus of five more minutes, and the 0.05 SOL unlock are the same rules as before.
+
+- Time counts only while the tab is visible.
+- A signature can be used once in that browser.
+- The transaction must have succeeded, be newer than seven days, and show at least 0.05 SOL gained by `5P1ArCLapXPjSEaNauVYAmtLKxEwoELcttQvPqmF1VYP`, including addresses loaded into the transaction.
+
+The unlock buys use of the app. It is not an investment and the page does not make claims about price.
+
+## Browser notes
+
+- PNG, JPG, text, stickers, and uploads work in current Chrome, Edge, Firefox, and Safari.
+- WebM prefers WebCodecs (VP9 or VP8) and falls back to `MediaRecorder` plus `canvas.captureStream`. The fallback records in real time, so a slow device drops frames. Chrome, Edge, and Firefox support one of these paths. Safari usually has no WebM encoder; use MP4 or GIF there.
+- MP4 prefers WebCodecs (H.264) and falls back to a browser that can record `video/mp4` (Safari 14.5 and newer). Headless or software-only GPUs may only expose a software H.264 encoder, which is slower.
+- GIF is encoded in JavaScript at a smaller size and about 10 frames a second, so long clips take longer and look softer.
+- Paste of images depends on the browser. iOS often only pastes images in some fields; the file picker is the reliable path.
+- The share button sends a file only when `navigator.canShare({ files })` is true. Otherwise it downloads the PNG.
+- Very old browsers without canvas capture or WebCodecs can still export a GIF.
+
+## Hosting
+
+GitHub Pages, from the repository root. Paths are relative, so the project site works without a build step.
+
+```bash
+npx serve .
+```
