@@ -32,6 +32,7 @@
         <button type="button" id="redoBtn">Redo</button>
         <button type="button" id="templatesBtn">Templates</button>
         <button type="button" id="aiOpenBtn">Generate with AI</button>
+        <button type="button" id="paintOpenBtn">Paint</button>
         <button type="button" id="surpriseBtn">Surprise</button>
       </div>
       <div class="stage-wrap" id="stageWrap">
@@ -79,9 +80,11 @@
         <div class="row-btns">
           <button type="button" id="aiGenerate" class="primary">Generate</button>
           <button type="button" id="aiRetry" hidden>Retry</button>
+          <button type="button" id="aiStandIn" hidden>Use local stand-in</button>
           <button type="button" id="aiSeed">New seed</button>
         </div>
-        <p class="hint" id="aiStatus" role="status"></p>
+        <div class="ai-busy" id="aiBusy" hidden><span></span></div>
+        <p class="ai-status" id="aiStatus" role="status"></p>
         <img id="aiPreview" class="ai-preview" alt="" hidden>
         <div class="row-btns" id="aiPlace" hidden>
           <button type="button" id="aiBase" class="primary">Set as base</button>
@@ -89,6 +92,11 @@
         </div>
         <button type="button" id="aiCaptions">Suggest captions</button>
         <div class="ai-captions" id="aiCaptionList"></div>
+        <p class="hint">Make one object, such as a golden sword or a wizard hat. It lands on the meme as its own layer. The plain background is removed in the browser.</p>
+        <label>Object
+          <input id="aiObjectPrompt" type="text" maxlength="80" placeholder="golden sword">
+        </label>
+        <button type="button" id="aiObject" class="primary">Make object</button>
       </div>
 
       <div data-panel="cast" hidden>
@@ -180,6 +188,48 @@
         <button type="button" id="cancelIntake">Cancel</button>
       </div>
     </div>
+  </div>
+
+  <div id="paintModal" class="paint-screen" hidden>
+    <div class="paint-canvas-wrap" id="paintCanvasWrap">
+      <canvas id="paintView" aria-label="Painting canvas"></canvas>
+    </div>
+    <aside class="paint-tools">
+      <div class="modal-head">
+        <h2>Paint</h2>
+        <button type="button" id="paintClose">Close</button>
+      </div>
+      <p class="hint">Brush, eraser, and undo. Upload a photo to paint over, or drop in an object.</p>
+      <div class="row-btns">
+        <button type="button" id="paintBrush" class="is-on">Brush</button>
+        <button type="button" id="paintEraser">Eraser</button>
+        <button type="button" id="paintMove">Move</button>
+        <button type="button" id="paintUndo">Undo</button>
+      </div>
+      <label>Color <input id="paintColor" type="color" value="#1a120c"></label>
+      <label class="slider">Size <input id="paintSize" type="range" min="2" max="80" value="18"><span id="paintSizeLabel">18</span></label>
+      <button type="button" id="paintUpload">Upload a photo</button>
+      <input id="paintFile" type="file" accept="image/*" hidden>
+      <label>Object
+        <input id="paintObjectPrompt" type="text" maxlength="80" placeholder="wizard hat">
+      </label>
+      <button type="button" id="paintMakeObject">Make object</button>
+      <div class="paint-shelf" id="paintObjects"></div>
+      <p class="hint">Forge stickers</p>
+      <div class="paint-shelf" id="paintStickers"></div>
+      <div class="row-btns">
+        <button type="button" id="paintBigger">Bigger</button>
+        <button type="button" id="paintSmaller">Smaller</button>
+        <button type="button" id="paintRotate">Rotate</button>
+        <button type="button" id="paintDelete">Remove</button>
+      </div>
+      <p class="ai-status" id="paintStatus" role="status"></p>
+      <div class="row-btns">
+        <button type="button" id="paintPng">Save PNG</button>
+        <button type="button" id="paintToMeme" class="primary">Send to meme</button>
+        <button type="button" id="paintAsBase">Use as meme base</button>
+      </div>
+    </aside>
   </div>
 
   <div id="progressModal" class="modal" hidden>
