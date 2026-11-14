@@ -8,7 +8,13 @@ export const QUESTO_BUY_URL = 'https://pump.fun/coin/5eCknU1RcP4QwWXCYicE4VGG8KY
 export const HOLDER_RECHECK_MS = 24 * 60 * 60 * 1000;
 
 const TOKEN_2022_PROGRAM = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
-const LS_HOLDER = 'mmc_v1_questo_holder';
+// One grant for this whole app. It is not a version and not a list of features.
+// Later Meme Crucible features that use the same paywall stay open while it is active.
+// Do not put a version in this key, and do not store which features it covers.
+export const QUESTO_HOLDER_KEY = 'mmc_questo_holder';
+const LS_HOLDER = QUESTO_HOLDER_KEY;
+const LS_HOLDER_RETIRED = 'mmc_v1_questo_holder';
+export const QUESTO_HOLDER_PROMISE = 'Hold 1M+ $QUESTO: full Meme Crucible free, including every future update. (This app only.)';
 const RETRY_MS = 15 * 60 * 1000;
 const B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
@@ -96,6 +102,7 @@ export function holderMessage(owner, nonce) {
     'Sign this message to prove you control this wallet.',
     'The app will then read the public $QUESTO balance for this address.',
     'This is not a transaction. No SOL is spent and nothing is approved.',
+    'It unlocks Meme Crucible only, including later updates to this app.',
     '',
     'Wallet: ' + owner,
     'Nonce: ' + nonce
@@ -321,11 +328,34 @@ export async function fetchQuestoRawBalance(owner, call = rpcCall) {
   return balanceFromParsedAccounts([byMint, token2022]);
 }
 
+function normalizeGrant(parsed) {
+  if (!parsed || parsed.ok !== true || typeof parsed.owner !== 'string') return null;
+  const grant = {
+    owner: parsed.owner,
+    raw: String(parsed.raw == null ? '0' : parsed.raw),
+    checkedAt: Number(parsed.checkedAt) || 0,
+    ok: true
+  };
+  if (parsed.nextCheckAt) grant.nextCheckAt = Number(parsed.nextCheckAt);
+  return grant;
+}
+
 export function readHolderGrant() {
   try {
-    const parsed = JSON.parse(localStorage.getItem(LS_HOLDER) || 'null');
-    if (!parsed || parsed.ok !== true || typeof parsed.owner !== 'string') return null;
-    return parsed;
+    let stored = localStorage.getItem(LS_HOLDER);
+    let fromRetired = false;
+    if (!stored) {
+      stored = localStorage.getItem(LS_HOLDER_RETIRED);
+      fromRetired = Boolean(stored);
+    }
+    const grant = normalizeGrant(JSON.parse(stored || 'null'));
+    if (!grant) return null;
+    const clean = JSON.stringify(grant);
+    if (fromRetired || stored !== clean) {
+      localStorage.setItem(LS_HOLDER, clean);
+      localStorage.removeItem(LS_HOLDER_RETIRED);
+    }
+    return grant;
   } catch (err) {
     return null;
   }
@@ -340,7 +370,7 @@ export function clearHolderGrant() {
 }
 
 function saveGrant(owner, raw) {
-  const grant = { owner, raw: raw.toString(), checkedAt: Date.now(), ok: true };
+  const grant = normalizeGrant({ owner, raw: raw.toString(), checkedAt: Date.now(), ok: true });
   localStorage.setItem(LS_HOLDER, JSON.stringify(grant));
   return grant;
 }
@@ -383,6 +413,6 @@ export async function unlockHolderWallet(entry, call = rpcCall) {
     ok: true,
     owner,
     raw,
-    message: 'Holder unlock is on for this browser. The balance is checked about once a day. Apps, not investments.'
+    message: 'Holder unlock is on for this browser. ' + QUESTO_HOLDER_PROMISE + ' The balance is checked about once a day. Apps, not investments.'
   };
 }

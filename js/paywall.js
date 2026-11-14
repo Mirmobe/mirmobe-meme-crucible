@@ -4,6 +4,7 @@
 // newer than 7 days, and the unlock address must have gained at least 0.05 SOL.
 import {
   QUESTO_BUY_URL,
+  QUESTO_HOLDER_PROMISE,
   holderUnlockActive,
   listWallets,
   refreshHolderGrant,
@@ -36,6 +37,7 @@ function solUnlocked() {
   return localStorage.getItem(LS_UNLOCKED) === '1';
 }
 
+// The holder grant opens this whole app. It is not scoped to a version or a feature list.
 function isUnlocked() {
   return solUnlocked() || holderUnlockActive();
 }
@@ -282,6 +284,14 @@ function chooseWallet(wallets) {
 function bindHolderUnlock() {
   const link = document.getElementById('questoBuyLink');
   if (link) link.href = QUESTO_BUY_URL;
+  const promise = document.getElementById('questoPromise');
+  if (promise) {
+    promise.textContent = '';
+    promise.append(QUESTO_HOLDER_PROMISE + ' ');
+    const note = document.createElement('strong');
+    note.textContent = 'Apps, not investments.';
+    promise.append(note);
+  }
   const button = document.getElementById('questoUnlockBtn');
   if (!button) return;
   button.addEventListener('click', async () => {
