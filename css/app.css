@@ -230,6 +230,15 @@ footer a { color: var(--gold); }
   padding: 0.75rem 1rem; font-weight: 700; cursor: pointer; border: 2px solid #fff4d2;
 }
 .btn-share-time { background: linear-gradient(135deg, #6d28d9, #4338ca); color: white; border-radius: 10px; }
+.holder-box { margin-top: 0.9rem; text-align: center; }
+.btn-holder {
+  display: block; width: 100%; text-align: center; border-radius: 999px;
+  padding: 0.75rem 1rem; font-weight: 700; cursor: pointer;
+  background: #fffaf0; color: #3a240c; border: 2px solid #8a5a12;
+}
+.holder-box a { color: #6b3a12; font-weight: 700; }
+.questo-wallets { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; margin: 0.4rem 0; }
+.questo-wallets[hidden] { display: none; }
 .verify-box { border: 1px dashed rgba(90, 52, 24, 0.4); border-radius: 10px; padding: 0.7rem; }
 .verify-row { display: flex; gap: 0.45rem; flex-wrap: wrap; }
 .verify-row input { flex: 1 1 180px; }

@@ -23,7 +23,7 @@ Heavy pieces (the other scenes, the cast, the sticker raster, and the video enco
 
 ## Trial and unlock
 
-The five-minute sample, the one-time share bonus of five more minutes, and the 0.05 SOL unlock are the same rules as before.
+The five-minute sample, the one-time share bonus of five more minutes, and the 0.05 SOL unlock are the same rules as before. A wallet that holds at least 1,000,000 $QUESTO (mint `5eCknU1RcP4QwWXCYicE4VGG8KY69TTUL7YZTma4pump`) can unlock the app without paying SOL. The wallet signs a message, not a transaction. The balance is read from a public RPC and checked again about once a day. Holding $QUESTO unlocks the app. It is not an investment.
 
 - Time counts only while the tab is visible.
 - A signature can be used once in that browser.
