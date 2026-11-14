@@ -2,6 +2,7 @@ import { ASPECTS, FONTS, BACKGROUNDS, CHARACTERS, loadImage, drawProceduralBackg
 import { stickerList, stickerCanvas, warmStickerThumbs } from './stickers.js';
 import { TEMPLATES, FX_PRESETS, presetById } from './templates.js';
 import { mountAi } from './generate.js';
+import { mountPaint } from './paint.js';
 
 const uid = (() => {
   let n = 1;
@@ -92,6 +93,7 @@ export class Editor {
     await this.applyTemplate(TEMPLATES[0], false);
     this.preloadRest();
     try { mountAi(this); } catch (err) { this.toast('The AI panel did not start.'); }
+    try { mountPaint(this); } catch (err) { this.toast('The paint screen did not start.'); }
   }
 
   toast(message) {
@@ -405,21 +407,22 @@ export class Editor {
     this.select(layer.id);
   }
 
-  addImageLayer(image, name) {
+  addImageLayer(image, name, heightRatio) {
     const id = 'up' + (this.assetSeq++);
     this.assets.set(id, { image, name: name || 'Upload' });
     this.pushHistory();
+    const ratioHeight = heightRatio || 0.55;
     const layer = this.materialize({
       type: 'image',
       assetId: id,
       name: name || 'Upload',
       x: 0.5,
       y: 0.5,
-      h: 0.55,
+      h: ratioHeight,
       lockAspect: true
     });
     const ratio = image.width / image.height;
-    layer.h = this.h * 0.55;
+    layer.h = this.h * ratioHeight;
     layer.w = layer.h * ratio;
     this.layers.push(layer);
     this.select(layer.id);
@@ -1070,6 +1073,8 @@ export class Editor {
     document.getElementById('surpriseBtn').addEventListener('click', () => this.surprise());
     document.getElementById('templatesBtn').addEventListener('click', () => this.openTemplates());
     document.getElementById('aiOpenBtn').addEventListener('click', () => this.showTab('ai'));
+    const paintOpen = document.getElementById('paintOpenBtn');
+    if (paintOpen) paintOpen.addEventListener('click', () => this.openPaint());
     document.getElementById('closeTemplates').addEventListener('click', () => this.closeTemplates());
     document.getElementById('pngBtn').addEventListener('click', () => this.exportStill('image/png', 'meme-crucible.png'));
     document.getElementById('jpgBtn').addEventListener('click', () => this.exportStill('image/jpeg', 'meme-crucible.jpg'));
@@ -1144,12 +1149,8 @@ export class Editor {
     if (inspector) inspector.hidden = name === 'ai';
     if (name === 'video') this.refreshCaptions();
     if (name === 'ai') {
-      const panel = document.querySelector('.panel');
       const anchor = document.getElementById('aiPrompt');
-      if (panel && anchor) {
-        const delta = anchor.getBoundingClientRect().top - panel.getBoundingClientRect().top;
-        panel.scrollTop += delta - 8;
-      }
+      if (anchor) anchor.scrollIntoView({ block: 'center', inline: 'nearest' });
     }
     if (name === 'stickers' && !this.stickersReady) {
       this.stickersReady = true;
@@ -1572,7 +1573,16 @@ export class Editor {
     document.getElementById('intakeModal').hidden = true;
   }
 
+  openPaint() {
+    if (document.body.classList.contains('paywalled')) {
+      this.toast('The trial is paused. Share or unlock to keep painting.');
+      return;
+    }
+    if (this.paintStudio) this.paintStudio.open();
+  }
+
   onPaste(event) {
+    if (document.body.classList.contains('painting')) return;
     const target = event.target;
     if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
     const items = event.clipboardData && event.clipboardData.items;
@@ -1591,6 +1601,7 @@ export class Editor {
 
   onKey(event) {
     if (document.body.classList.contains('paywalled')) return;
+    if (document.body.classList.contains('painting')) return;
     const target = event.target;
     const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
     const meta = event.metaKey || event.ctrlKey;

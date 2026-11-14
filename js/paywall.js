@@ -2,6 +2,14 @@
 // Payment checks are unchanged from the previous crucible: a signature can be
 // used once in this browser, the transaction must have succeeded, it must be
 // newer than 7 days, and the unlock address must have gained at least 0.05 SOL.
+import {
+  QUESTO_BUY_URL,
+  QUESTO_HOLDER_PROMISE,
+  holderUnlockActive,
+  listWallets,
+  refreshHolderGrant,
+  unlockHolderWallet
+} from './questo.js';
 
 const UNLOCK_PRICE_SOL = 0.05;
 const PAYMENT_ADDRESS = '5P1ArCLapXPjSEaNauVYAmtLKxEwoELcttQvPqmF1VYP';
@@ -25,8 +33,13 @@ function readNumber(key) {
   return Number.isFinite(n) && n >= 0 ? n : 0;
 }
 
-function isUnlocked() {
+function solUnlocked() {
   return localStorage.getItem(LS_UNLOCKED) === '1';
+}
+
+// The holder grant opens this whole app. It is not scoped to a version or a feature list.
+function isUnlocked() {
+  return solUnlocked() || holderUnlockActive();
 }
 
 function hasShared() {
@@ -75,7 +88,7 @@ function updateTrialBadge() {
   badge.classList.remove('is-low', 'is-unlocked');
   if (isUnlocked()) {
     badge.classList.add('is-unlocked');
-    badge.textContent = 'Unlocked';
+    badge.textContent = solUnlocked() ? 'Unlocked' : 'Holder unlock';
     return;
   }
   const left = remainingMs();
@@ -241,6 +254,71 @@ async function grantShareBonus() {
   return true;
 }
 
+function setQuestoStatus(message, kind) {
+  const el = document.getElementById('questoStatus');
+  if (!el) return;
+  el.textContent = message || '';
+  el.className = 'paywall-status' + (kind ? ' is-' + kind : '');
+}
+
+function chooseWallet(wallets) {
+  const box = document.getElementById('questoWallets');
+  if (!box) return Promise.resolve(wallets[0]);
+  box.hidden = false;
+  box.innerHTML = '';
+  return new Promise((resolve) => {
+    wallets.forEach((entry) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'chip';
+      button.textContent = entry.name;
+      button.addEventListener('click', () => {
+        box.hidden = true;
+        resolve(entry);
+      });
+      box.appendChild(button);
+    });
+  });
+}
+
+function bindHolderUnlock() {
+  const link = document.getElementById('questoBuyLink');
+  if (link) link.href = QUESTO_BUY_URL;
+  const promise = document.getElementById('questoPromise');
+  if (promise) {
+    promise.textContent = '';
+    promise.append(QUESTO_HOLDER_PROMISE + ' ');
+    const note = document.createElement('strong');
+    note.textContent = 'Apps, not investments.';
+    promise.append(note);
+  }
+  const button = document.getElementById('questoUnlockBtn');
+  if (!button) return;
+  button.addEventListener('click', async () => {
+    const wallets = listWallets();
+    if (!wallets.length) {
+      setQuestoStatus('No Solana wallet was found. Install Phantom, or another wallet that can sign a message, then refresh. This app never asks for a seed phrase or a private key.', 'error');
+      return;
+    }
+    button.disabled = true;
+    setQuestoStatus(wallets.length > 1 ? 'Choose a wallet. You will sign a message, not a transaction.' : 'Confirm the message in your wallet. No SOL is spent.', 'pending');
+    try {
+      const entry = wallets.length === 1 ? wallets[0] : await chooseWallet(wallets);
+      const result = await unlockHolderWallet(entry);
+      setQuestoStatus(result.message, result.ok ? 'ok' : 'error');
+      if (result.ok) {
+        hidePaywall();
+        updateTrialBadge();
+      }
+    } catch (err) {
+      const message = err && err.message ? err.message : 'The holder check could not finish.';
+      setQuestoStatus(message, 'error');
+    } finally {
+      button.disabled = false;
+    }
+  });
+}
+
 function updateShareButton() {
   const btn = document.getElementById('shareBonusBtn');
   if (!btn) return;
@@ -301,6 +379,7 @@ function setupPaywallUi() {
   });
 
   updateShareButton();
+  bindHolderUnlock();
 }
 
 export function initTrialPaywall() {
@@ -312,4 +391,5 @@ export function initTrialPaywall() {
   });
   setInterval(tickTrial, 250);
   tickTrial();
+  refreshHolderGrant().then(() => tickTrial()).catch(() => {});
 }

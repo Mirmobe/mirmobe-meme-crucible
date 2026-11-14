@@ -12,6 +12,12 @@ MIT License. Copyright (c) 2023 Vanilagy.
 
 The file `webm-muxer.js` is the browser build of [webm-muxer](https://github.com/Vanilagy/webm-muxer) 5.1.3, used to wrap WebCodecs VP8 and VP9 samples in a WebM. It is included so video export stays on the static site with no network call.
 
+## tweetnacl
+
+Public domain. Written in 2014 by Dmitry Chestnykh and Devi Mandiri, from TweetNaCl by Daniel J. Bernstein, Wesley Janssen, Sjaak Lange, Peter Schwabe, and Tanja Lange.
+
+The file `nacl.js` is [tweetnacl](https://github.com/dchest/tweetnacl-js) 1.0.3, used to verify the wallet message for the $QUESTO holder unlock.
+
 ## gifenc
 
 MIT License. Copyright (c) 2020 Matt DesLauriers.

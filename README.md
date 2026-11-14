@@ -15,15 +15,17 @@ Live site: [mirmobe.github.io/mirmobe-meme-crucible](https://mirmobe.github.io/m
 - Upload from the file picker, drag-and-drop, or paste (when the browser exposes an image on the clipboard). Use it as the base or as its own layer. A short video can be the base of a video meme.
 - Download PNG or JPG, or share the PNG when the browser allows file sharing.
 - Video memes, entirely on device: zoom, pan, shake, text pop-in, sparks, and embers. Caption timing per text layer. Export WebM, MP4, or GIF, with a progress bar and cancel.
-- Generate with AI: a prompt and a style (cartoon realistic, comic, pixel art, anime, oil painting, or 3D render). The picture comes from Pollinations' free classic image endpoint, with no API key. Use it as the base or as a layer, or roll a new seed. Suggest captions uses their free text endpoint. The trial gates this the same way as the rest of the app.
+- Generate with AI: a prompt and a style (cartoon realistic, comic, pixel art, anime, oil painting, or 3D render). The picture comes from Pollinations' free classic image endpoint, with no API key. An empty prompt uses the example text, and the button shows a loading state. If that service fails, Retry and a local stand-in stay available. Use the picture as the base or as a layer. Suggest captions uses their free text endpoint.
+- Make an object from a short prompt, such as a golden sword or a wizard hat. It is placed as its own layer, and a plain background is removed in the browser. The same object can be dropped into Paint.
+- Paint opens a screen where the canvas takes about three quarters of the view. Brush, color, size, eraser, and undo. Upload a photo and paint over it, drop in objects or forge stickers, then save a PNG or send the painting into the meme.
 
-The free image service draws at most a 768×768 area, keeps the current frame's aspect ratio, allows about one image every 45 seconds and one caption request every 30 seconds, and may stamp a small Pollinations mark even when `nologo=true` is sent. It is best-effort, with no uptime promise. Prompts are sent to that service and the same URL can be cached publicly. A client-side filter blocks obvious sexual content, sexual or exploitative content involving minors, real-person deepfake requests, and hate. Pollinations applies its own filter as well (`safe=true`).
+The free image service draws at most a 768×768 area, keeps the current frame's aspect ratio, allows about one picture every 45 seconds and one caption request every 30 seconds, and may stamp a small Pollinations mark even when `nologo=true` is sent. A failed picture tries one smaller request, then offers Retry and a picture drawn locally in the browser. It is best-effort, with no uptime promise. Prompts are sent to that service and the same URL can be cached publicly. A client-side filter blocks obvious sexual content, sexual or exploitative content involving minors, real-person deepfake requests, and hate. Pollinations applies its own filter as well (`safe=true`).
 
 Heavy pieces (the other scenes, the cast, the sticker raster, and the video encoder) load after the first picture is on screen.
 
 ## Trial and unlock
 
-The five-minute sample, the one-time share bonus of five more minutes, and the 0.05 SOL unlock are the same rules as before.
+The five-minute sample, the one-time share bonus of five more minutes, and the 0.05 SOL unlock are the same rules as before. A wallet that holds at least 1,000,000 $QUESTO (mint `5eCknU1RcP4QwWXCYicE4VGG8KY69TTUL7YZTma4pump`) unlocks the full Meme Crucible, including every future update to this app. It does not unlock other Mirmobe apps. The wallet signs a message, not a transaction. The balance is read from a public RPC and checked again about once a day. The grant is one local record for the whole app, with no version and no feature list, so later features stay open while the balance stays at or above the threshold. Holding $QUESTO unlocks the app. It is not an investment.
 
 - Time counts only while the tab is visible.
 - A signature can be used once in that browser.
